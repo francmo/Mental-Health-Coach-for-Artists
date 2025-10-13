@@ -12,11 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artist Mental Health Coach</title>
 
-    <meta name="description" content="Un coach per il benessere mentale dedicato agli studenti delle Accademie di Belle Arti. Traccia il tuo mood, pratica esercizi creativi e ricevi supporto personalizzato con AI.">
+    <meta name="description" content="Un coach per il benessere mentale dedicato a Studenti e Artisti. Traccia il tuo mood, pratica esercizi creativi e ricevi supporto personalizzato con AI.">
     <meta name="author" content="Francesco Mariano">
 
     <meta property="og:title" content="Artist Mental Health Coach">
-    <meta property="og:description" content="Un coach per il benessere mentale dedicato agli studenti delle Accademie di Belle Arti. Traccia il tuo mood, pratica esercizi creativi e ricevi supporto personalizzato con AI.">
+    <meta property="og:description" content="Un coach per il benessere mentale dedicato a Studenti e Artisti. Traccia il tuo mood, pratica esercizi creativi e ricevi supporto personalizzato con AI.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://i.imgur.com/placeholder.png">
     <meta property="og:url" content="https://tuodominio.com">
@@ -25,7 +25,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Artist Mental Health Coach">
-    <meta name="twitter:description" content="Un coach per il benessere mentale dedicato agli studenti delle Accademie di Belle Arti. Traccia il tuo mood, pratica esercizi creativi e ricevi supporto personalizzato con AI.">
+    <meta name="twitter:description" content="Un coach per il benessere mentale dedicato a Studenti e Artisti. Traccia il tuo mood, pratica esercizi creativi e ricevi supporto personalizzato con AI.">
     <meta name="twitter:image" content="https://i.imgur.com/placeholder.png">
 
     <meta name="theme-color" content="#667eea">
@@ -309,6 +309,11 @@
           };
 
           const handleImageUpload = async (file) => {
+            if (!geminiApiKey) {
+              setShowApiSetup(true);
+              return;
+            }
+
             const validTypes = ['image/', '.heic', '.heif'];
             const isValid = validTypes.some(type =>
               file.type.startsWith(type) || file.name.toLowerCase().endsWith(type)
@@ -373,7 +378,7 @@
                     contents: [{
                       parts: [
                         {
-                          text: "Sei un critico d'arte empatico e incoraggiante per studenti di Belle Arti. Analizza quest'opera e fornisci: 1) Un commento positivo specifico (cosa funziona bene) 2) Un suggerimento costruttivo per migliorare 3) Un incoraggiamento personalizzato. Sii breve (max 4 frasi) ma specifico e sincero."
+                          text: "Sei un critico d'arte empatico e incoraggiante per Studenti e Artisti. Analizza quest'opera e fornisci: 1) Un commento positivo specifico (cosa funziona bene) 2) Un suggerimento costruttivo per migliorare 3) Un incoraggiamento personalizzato. Sii breve (max 4 frasi) ma specifico e sincero."
                         },
                         {
                           inline_data: {
@@ -524,7 +529,7 @@
             try {
               const patterns = findMoodPatterns();
 
-              const prompt = `Sei uno psicologo specializzato in supporto per studenti di Belle Arti. Analizza questi dati e genera un report empatico e motivante:
+              const prompt = `Sei uno psicologo specializzato in supporto per Studenti e Artisti. Analizza questi dati e genera un report empatico e motivante:
 
 Dati:
 - ${stats.totalMoods} registrazioni mood negli ultimi giorni
@@ -1532,9 +1537,9 @@ Sii empatico, positivo ma realistico. Max 300 parole.`;
             }
 
             const prompts = {
-              'blocco-creativo': 'Sei un coach per studenti di Belle Arti. Genera un esercizio creativo per superare blocco creativo e perfezionismo. Deve essere pratico (5-30 min), provocatorio ma sicuro, focalizzato sull\'azione artistica concreta. Includi 3 esempi diversi. Rispondi SOLO con JSON: {"title": "Nome", "description": "Descrizione", "prompt": "Istruzioni", "duration": "Tempo", "examples": ["Esempio 1: ...", "Esempio 2: ...", "Esempio 3: ..."]}',
+              'blocco-creativo': 'Sei un coach per Studenti e Artisti. Genera un esercizio creativo per superare blocco creativo e perfezionismo. Deve essere pratico (5-30 min), provocatorio ma sicuro, focalizzato sull\'azione artistica concreta. Includi 3 esempi diversi. Rispondi SOLO con JSON: {"title": "Nome", "description": "Descrizione", "prompt": "Istruzioni", "duration": "Tempo", "examples": ["Esempio 1: ...", "Esempio 2: ...", "Esempio 3: ..."]}',
               'mancanza-ispirazione': 'Sei un coach creativo per artisti. Genera esercizio per sbloccare ispirazione. Deve stimolare pensiero divergente, essere divertente, generare idee fresche. Includi 3 esempi pratici. Rispondi SOLO con JSON: {"title": "Nome", "description": "Descrizione", "prompt": "Istruzioni", "duration": "Tempo", "examples": ["Esempio 1: ...", "Esempio 2: ...", "Esempio 3: ..."]}',
-              'burnout-accademico': 'Sei uno specialista di benessere per studenti di Accademia belle ARti. Genera esercizio pratico per gestire stress accademico e burnout. Deve essere rilassante, fattibile anche con poca energia, dare sollievo concreto. Includi 3 varianti. Rispondi SOLO con JSON: {"title": "Nome", "description": "Descrizione", "prompt": "Istruzioni", "duration": "Tempo", "examples": ["Esempio 1: ...", "Esempio 2: ...", "Esempio 3: ..."]}',
+              'burnout-accademico': 'Sei uno specialista di benessere per Studenti e Artisti. Genera esercizio pratico per gestire stress accademico e burnout. Deve essere rilassante, fattibile anche con poca energia, dare sollievo concreto. Includi 3 varianti. Rispondi SOLO con JSON: {"title": "Nome", "description": "Descrizione", "prompt": "Istruzioni", "duration": "Tempo", "examples": ["Esempio 1: ...", "Esempio 2: ...", "Esempio 3: ..."]}',
               'ansia-critica': 'Sei un coach per gestire ansia da performance artistica. Genera esercizio per affrontare critiche, revisioni, esami con calma. Deve ridurre ansia, aumentare fiducia, separare valore personale dal giudizio. Includi 3 applicazioni diverse. Rispondi SOLO con JSON: {"title": "Nome", "description": "Descrizione", "prompt": "Istruzioni", "duration": "Tempo", "examples": ["Esempio 1: ...", "Esempio 2: ...", "Esempio 3: ..."]}'
             };
 
@@ -2053,10 +2058,10 @@ Sii empatico, positivo ma realistico. Max 300 parole.`;
                     Carica il tuo Lavoro
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Condividi un'immagine del tuo esercizio e ricevi un feedback
+                    Condividi un'immagine del tuo esercizio e ricevi un feedback AI
                   </p>
 
-                  {!geminiApiKey ? (
+                  {!geminiApiKey || geminiApiKey.trim() === '' ? (
                     <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-lg">
                       <div className="flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
@@ -2095,7 +2100,7 @@ Sii empatico, positivo ma realistico. Max 300 parole.`;
                         type="file"
                         accept="image/*,.heic,.heif"
                         className="hidden"
-                        disabled={isGenerating}
+                        disabled={isGenerating || !geminiApiKey}
                         onChange={(e) => {
                           if (e.target.files[0]) {
                             handleImageUpload(e.target.files[0]);
@@ -2602,7 +2607,7 @@ Sii empatico, positivo ma realistico. Max 300 parole.`;
                         3. Esercizi Creativi
                       </h3>
                       <div className="bg-purple-50 p-5 rounded-xl space-y-3">
-                        <p className="text-gray-700"><strong>Cosa fa:</strong> Oltre 80 esercizi creativi specifici per studenti di Belle Arti.</p>
+                        <p className="text-gray-700"><strong>Cosa fa:</strong> Oltre 80 esercizi creativi specifici per Studenti e Artisti.</p>
                         <p className="text-gray-700"><strong>Come usarlo:</strong></p>
                         <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
                           <li>Clicca su "Esercizi" dalla home</li>
@@ -2713,7 +2718,7 @@ Sii empatico, positivo ma realistico. Max 300 parole.`;
 
                     <section className="text-center pt-4 border-t border-gray-200">
                       <p className="text-gray-600">
-                        Creato con ❤️ per gli studenti delle Accademie di Belle Arti
+                        Creato con ❤️ per Studenti e Artisti
                       </p>
                       <p className="text-sm text-gray-500 mt-2">
                         Per supporto: <a href="mailto:francescomariano@gmail.com" className="text-purple-600 underline">francescomariano@gmail.com</a>
