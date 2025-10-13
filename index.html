@@ -338,7 +338,7 @@
                 aiComment: null
               };
 
-              if (geminiApiKey && apiUsageMode) {
+              if (geminiApiKey) {
                 try {
                   const comment = await generateImageComment(resizedDataUrl);
                   imageData.aiComment = comment;
@@ -2080,35 +2080,30 @@ Sii empatico, positivo ma realistico. Max 300 parole.`;
                       </div>
                     </div>
                   ) : (
-                    <label className={`flex items-center justify-center gap-3 px-6 py-4 rounded-xl transition-all ${
-                      isGenerating
-                        ? 'bg-gray-300 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white cursor-pointer hover:from-purple-600 hover:to-pink-600'
-                    }`}>
+                    <>
                       {isGenerating ? (
-                        <>
+                        <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gray-300 rounded-xl cursor-not-allowed">
                           <RefreshCw className="w-5 h-5 animate-spin" />
                           <span className="font-semibold text-gray-700">Caricamento in corso...</span>
-                        </>
+                        </div>
                       ) : (
-                        <>
+                        <label className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl cursor-pointer hover:from-purple-600 hover:to-pink-600 transition-all">
                           <Upload className="w-5 h-5" />
                           <span className="font-semibold">Seleziona Immagine</span>
-                        </>
+                          <input
+                            type="file"
+                            accept="image/*,.heic,.heif"
+                            className="hidden"
+                            onChange={(e) => {
+                              if (e.target.files[0]) {
+                                handleImageUpload(e.target.files[0]);
+                                e.target.value = '';
+                              }
+                            }}
+                          />
+                        </label>
                       )}
-                      <input
-                        type="file"
-                        accept="image/*,.heic,.heif"
-                        className="hidden"
-                        disabled={isGenerating || !geminiApiKey}
-                        onChange={(e) => {
-                          if (e.target.files[0]) {
-                            handleImageUpload(e.target.files[0]);
-                            e.target.value = '';
-                          }
-                        }}
-                      />
-                    </label>
+                    </>
                   )}
 
                   {uploadedImages.filter(img => img.exerciseId === selectedExercise).length > 0 && (
