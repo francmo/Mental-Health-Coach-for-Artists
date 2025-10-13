@@ -309,27 +309,17 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    console.log('Conversione a blob...');
-                    canvas.toBlob((blob) => {
-                      if (!blob) {
-                        clearTimeout(timeout);
-                        reject(new Error('Impossibile convertire immagine in blob'));
-                        return;
-                      }
-
-                      console.log('Blob creato, dimensione:', blob.size, 'bytes');
-                      const resizedReader = new FileReader();
-                      resizedReader.onload = (event) => {
-                        clearTimeout(timeout);
-                        console.log('Ridimensionamento completato!');
-                        resolve(event.target.result);
-                      };
-                      resizedReader.onerror = (err) => {
-                        clearTimeout(timeout);
-                        reject(err);
-                      };
-                      resizedReader.readAsDataURL(blob);
-                    }, 'image/jpeg', 0.85);
+                    console.log('Conversione a DataURL (più affidabile di toBlob)...');
+                    try {
+                      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                      clearTimeout(timeout);
+                      console.log('Ridimensionamento completato! Dimensione dataURL:', dataUrl.length);
+                      resolve(dataUrl);
+                    } catch (err) {
+                      clearTimeout(timeout);
+                      console.error('Errore toDataURL:', err);
+                      reject(new Error('Impossibile convertire canvas in immagine: ' + err.message));
+                    }
                   } catch (err) {
                     clearTimeout(timeout);
                     reject(err);
