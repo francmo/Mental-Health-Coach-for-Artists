@@ -415,7 +415,7 @@
               console.log('Base64 estratto, lunghezza:', base64Image.length);
 
               const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 15000);
+              const timeoutId = setTimeout(() => controller.abort(), 30000);
 
               console.log('Invio richiesta a Gemini API...');
               const response = await fetch(
