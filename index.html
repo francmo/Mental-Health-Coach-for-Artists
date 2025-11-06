@@ -1956,6 +1956,15 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
             return variants[Math.floor(Math.random() * variants.length)];
           };
 
+          // Funzione per pulire asterischi Markdown dal testo generato da AI
+          const cleanMarkdown = (text) => {
+            if (!text) return text;
+            return text
+              .replace(/\*\*\*/g, '')  // Rimuove *** (grassetto + corsivo)
+              .replace(/\*\*/g, '')    // Rimuove ** (grassetto)
+              .replace(/\*/g, '');     // Rimuove * (corsivo)
+          };
+
           const generateWithGemini = async (category) => {
             if (!geminiApiKey) {
               alert('⚠️ Configura prima la tua API key di Gemini nelle impostazioni!');
@@ -2037,16 +2046,26 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
 
               if (jsonMatch) {
                 const exercise = JSON.parse(jsonMatch[0]);
+
+                // Pulisce asterischi Markdown da tutti i campi
+                const cleanedExercise = {
+                  title: cleanMarkdown(exercise.title),
+                  description: cleanMarkdown(exercise.description),
+                  prompt: cleanMarkdown(exercise.prompt),
+                  duration: exercise.duration,
+                  examples: exercise.examples ? exercise.examples.map(ex => cleanMarkdown(ex)) : []
+                };
+
                 setIsGenerating(false);
-                console.log('✅ Esercizio generato con successo');
-                return exercise;
+                console.log('✅ Esercizio generato con successo (asterischi rimossi)');
+                return cleanedExercise;
               } else {
                 setIsGenerating(false);
                 console.log('⚠️ Formato JSON non trovato, uso testo raw');
                 return {
                   title: "Esercizio Generato da AI",
                   description: "Esercizio personalizzato",
-                  prompt: generatedText,
+                  prompt: cleanMarkdown(generatedText),
                   duration: "15 min",
                   examples: []
                 };
