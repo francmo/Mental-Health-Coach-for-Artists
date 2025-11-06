@@ -57,7 +57,7 @@
             overflow: hidden;
         }
 
-        /* Calming fog effect */
+        /* Calming fog effect - static */
         .gradient-art::before {
             content: '';
             position: absolute;
@@ -69,65 +69,11 @@
                 radial-gradient(ellipse at 50% 100%, rgba(168, 213, 186, 0.3) 0%, transparent 50%),
                 radial-gradient(ellipse at 0% 50%, rgba(125, 211, 192, 0.2) 0%, transparent 50%),
                 radial-gradient(ellipse at 100% 50%, rgba(125, 211, 192, 0.2) 0%, transparent 50%);
-            animation: cloudMove 20s ease-in-out infinite;
             pointer-events: none;
+            opacity: 0.4;
         }
 
-        @keyframes cloudMove {
-            0%, 100% { opacity: 0.3; transform: translateY(0); }
-            50% { opacity: 0.6; transform: translateY(-20px); }
-        }
-
-        /* Floating butterflys */
-        @keyframes butterflyFloat {
-            0% { transform: translateX(-100px) translateY(0) scale(1); }
-            25% { transform: translateX(25vw) translateY(-30px) scale(0.8); }
-            50% { transform: translateX(50vw) translateY(20px) scale(1.1); }
-            75% { transform: translateX(75vw) translateY(-10px) scale(0.9); }
-            100% { transform: translateX(calc(100vw + 100px)) translateY(0) scale(1); }
-        }
-
-        .butterfly {
-            position: fixed;
-            font-size: 24px;
-            animation: butterflyFloat 15s linear infinite;
-            z-index: 1000;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .butterfly:nth-child(2) { animation-delay: 5s; top: 20%; }
-        .butterfly:nth-child(3) { animation-delay: 10s; top: 60%; animation-duration: 18s; }
-
-        /* Floating flowers */
-        @keyframes flowerFloat {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.6; }
-            25% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
-            50% { transform: translateY(-10px) translateX(-10px); opacity: 0.6; }
-            75% { transform: translateY(-30px) translateX(5px); opacity: 0.7; }
-        }
-
-        .flower {
-            position: fixed;
-            font-size: 32px;
-            animation: flowerFloat 6s ease-in-out infinite;
-            z-index: 999;
-            pointer-events: none;
-        }
-
-        .flower:nth-child(2) { animation-delay: 2s; right: 10%; top: 20%; animation-duration: 8s; }
-        .flower:nth-child(3) { animation-delay: 4s; left: 15%; bottom: 20%; animation-duration: 7s; }
-
-        /* Flower pulse */
-        @keyframes flowerPulse {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.1); filter: brightness(1.3); }
-        }
-
-        .flower {
-            display: inline-block;
-            animation: flowerPulse 2s ease-in-out infinite;
-        }
+        /* Butterflies and flowers removed for cleaner interface */
 
         
 
@@ -178,39 +124,7 @@
             animation: calmGlow 2s ease-in-out infinite;
         }
 
-        /* Pianta animata */
-        .butterfly-float {
-            position: fixed;
-            font-size: 4.5em;
-            z-index: 9999;
-            animation: floatAround 25s linear infinite, plantBounce 0.4s ease-in-out infinite, plantShake 0.1s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px rgba(125, 211, 192, 0.6));
-        }
-
-        @keyframes floatAround {
-            0% { top: -5%; left: 0%; }
-            10% { top: 10%; left: 15%; }
-            20% { top: 25%; left: 30%; }
-            30% { top: 15%; left: 50%; }
-            40% { top: 40%; left: 70%; }
-            50% { top: 60%; left: 85%; }
-            60% { top: 75%; left: 65%; }
-            70% { top: 80%; left: 40%; }
-            80% { top: 55%; left: 20%; }
-            90% { top: 30%; left: 5%; }
-            100% { top: -5%; left: 0%; }
-        }
-
-        @keyframes plantBounce {
-            0%, 100% { transform: translateY(0) rotate(var(--plant-angle, 0deg)); }
-            50% { transform: translateY(-8px) rotate(var(--plant-angle, 0deg)); }
-        }
-
-        @keyframes plantShake {
-            0%, 100% { transform: translateX(0) translateY(var(--bounce-y, 0)) rotate(var(--plant-angle, 0deg)); }
-            25% { transform: translateX(-2px) translateY(var(--bounce-y, 0)) rotate(var(--plant-angle, 0deg)); }
-            75% { transform: translateX(2px) translateY(var(--bounce-y, 0)) rotate(var(--plant-angle, 0deg)); }
-        }
+        /* Plant animations removed for cleaner interface */
 
         /* Animazioni mood selezionato */
         @keyframes moodSelect {
@@ -247,29 +161,6 @@
             font-weight: bold;
             animation: checkmarkAppear 0.5s ease-out 0.6s both;
             text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
-        }
-
-        /* Pianta che si muove verso target con animazione fluida */
-        .plant-run-to-target {
-            animation: plantBounce 0.3s ease-in-out infinite, plantShake 0.08s ease-in-out infinite !important;
-            transition: top 1.5s cubic-bezier(0.1, 0.3, 0.4, 1),
-                        left 1.5s cubic-bezier(0.1, 0.3, 0.4, 1),
-                        transform 0.1s ease-in-out !important;
-        }
-
-        /* Nasconde le animazioni quando disabilitate */
-        .animations-disabled .butterfly,
-        .animations-disabled .flower,
-        .animations-disabled .butterfly-float {
-            display: none !important;
-        }
-
-        /* Pianta spaventata si muove velocemente */
-        .plant-scared {
-            animation: plantBounce 0.2s ease-in-out infinite, plantShake 0.08s ease-in-out infinite !important;
-            transition: top 1.2s cubic-bezier(0.4, 0.1, 0.3, 1),
-                        left 1.2s cubic-bezier(0.4, 0.1, 0.3, 1) !important;
-            filter: drop-shadow(0 0 20px rgba(255, 183, 197, 0.8)) !important;
         }
 
         /* Wellness text colors */
@@ -387,8 +278,6 @@
           });
           const [currentMood, setCurrentMood] = useState(null);
           const [selectedMoodId, setSelectedMoodId] = useState(null);
-          const [plantTarget, setPlantTarget] = useState(null);
-          const [plantScared, setPlantScared] = useState(false);
           const [geminiApiKey, setGeminiApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
           const [showApiSetup, setShowApiSetup] = useState(false);
           const [selectedExercise, setSelectedExercise] = useState(null);
@@ -432,8 +321,6 @@
           const [authLoading, setAuthLoading] = useState(true);
           const [showFirebaseAuth, setShowFirebaseAuth] = useState(false);
           const [useCloudSync, setUseCloudSync] = useState(false);
-          const [animationsEnabled, setAnimationsEnabled] = useState(true);
-
           useEffect(() => {
             localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
           }, [moodHistory]);
@@ -441,14 +328,6 @@
           useEffect(() => {
             localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
           }, [journalEntries]);
-
-          useEffect(() => {
-            if (animationsEnabled) {
-              document.body.classList.remove('animations-disabled');
-            } else {
-              document.body.classList.add('animations-disabled');
-            }
-          }, [animationsEnabled]);
 
           useEffect(() => {
             localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
@@ -2293,15 +2172,11 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
               const targetX = (rect.left / window.innerWidth) * 100;
               const targetY = (rect.top / window.innerHeight) * 100;
 
-              // Fai correre il ragno verso il mood
-              setPlantTarget({ x: targetX, y: targetY });
-
-              // Dopo l'animazione (1.8 secondi), torna alla home
+              // Torna alla home dopo la selezione
               setTimeout(() => {
                 setSelectedMoodId(null);
-                setPlantTarget(null);
                 setCurrentView('home');
-              }, 1800);
+              }, 1000);
             };
 
             return (
@@ -3957,34 +3832,6 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
                 )}
               </div>
 
-              {/* Ragno animato controllato */}
-              <div
-                className={`butterfly-float ${plantScared ? 'plant-scared' : plantTarget ? 'plant-run-to-target' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Calcola posizione casuale lontana per scappare
-                  const randomX = Math.random() * 100;
-                  const randomY = Math.random() * 100;
-                  setPlantScared({ x: randomX, y: randomY });
-                  setPlantTarget(null);
-
-                  // Torna normale dopo che ha finito di scappare
-                  setTimeout(() => {
-                    setPlantScared(false);
-                  }, 3000);
-                }}
-                style={{
-                  ...(plantTarget || plantScared) ? {
-                    top: `${(plantTarget || plantScared)?.y || 0}%`,
-                    left: `${(plantTarget || plantScared)?.x || 0}%`
-                  } : {},
-                  cursor: 'pointer',
-                  pointerEvents: 'auto'
-                }}
-              >
-                🌿
-              </div>
-
               <div className="max-w-5xl mx-auto py-6">
                 <div className="bg-gradient-to-br from-white via-teal-50 to-green-50 rounded-3xl shadow-2xl p-6 md:p-8 border-2 border-teal-400/30">
                   {currentView === 'home' && <HomeView />}
@@ -4068,17 +3915,6 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
               <ProfileBenefitsModal />
               <ProfileModal />
               <FirebaseAuthModal />
-
-              <button
-                onClick={() => setAnimationsEnabled(!animationsEnabled)}
-                className="fixed bottom-44 right-6 bg-gradient-to-r from-sky-400 to-cyan-500 text-gray-800 px-4 py-3 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 z-40 flex items-center gap-2 calm-glow border-2 border-teal-400/50"
-                title={animationsEnabled ? "Ferma animazioni" : "Avvia animazioni"}
-              >
-                <span className="text-xl">{animationsEnabled ? '⏸️' : '▶️'}</span>
-                <span className="font-semibold text-sm whitespace-nowrap">
-                  {animationsEnabled ? 'Stop' : 'Play'}
-                </span>
-              </button>
 
               <button
                 onClick={() => setShowGuide(true)}
