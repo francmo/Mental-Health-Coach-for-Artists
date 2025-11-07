@@ -321,6 +321,11 @@
           const [authLoading, setAuthLoading] = useState(true);
           const [showFirebaseAuth, setShowFirebaseAuth] = useState(false);
           const [useCloudSync, setUseCloudSync] = useState(false);
+
+          // Stati Onboarding
+          const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+          const [showTour, setShowTour] = useState(false);
+          const [tourStep, setTourStep] = useState(0);
           useEffect(() => {
             localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
           }, [moodHistory]);
@@ -419,6 +424,14 @@
           useEffect(() => {
             console.log('geminiApiKey cambiato:', geminiApiKey ? 'PRESENTE (' + geminiApiKey.substring(0, 10) + '...)' : 'ASSENTE');
           }, [geminiApiKey]);
+
+          // Check first visit for onboarding
+          useEffect(() => {
+            const hasVisited = localStorage.getItem('hasVisitedBefore');
+            if (!hasVisited && !authLoading) {
+              setShowWelcomeModal(true);
+            }
+          }, [authLoading]);
 
           useEffect(() => {
             let interval;
@@ -2153,7 +2166,7 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
                 </button>
               </div>
 
-              <div className="text-center">
+              <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
                 <a
                   href="Guida_Artist_Mental_Health_Coach.pdf"
                   download="Guida_Artist_Mental_Health_Coach.pdf"
@@ -2161,6 +2174,16 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
                 >
                   📥 Scarica la Guida (PDF)
                 </a>
+                <button
+                  onClick={() => {
+                    setShowWelcomeModal(true);
+                  }}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-xl hover:from-teal-600 hover:to-blue-600 transition-all shadow-lg border-2 border-teal-400/50 font-semibold text-lg"
+                  title="Rivedi il tutorial di benvenuto"
+                >
+                  <HelpCircle className="w-6 h-6" />
+                  Rivedi Tutorial
+                </button>
               </div>
 
               <div className="bg-gradient-to-r from-teal-100/40 via-green-100/40 to-white/60 p-6 rounded-xl border-2 border-teal-400/50 backdrop-blur-sm">
@@ -3797,6 +3820,302 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
 
           return (
             <div className="min-h-screen bg-gray-50 p-4">
+              {/* Modal Benvenuto - Prima Visita */}
+              {showWelcomeModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fadeIn">
+                  <div className="bg-gradient-to-br from-white via-teal-50 to-green-50 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border-4 border-teal-400/50 animate-slideIn">
+                    <div className="p-6 md:p-10">
+                      {/* Header */}
+                      <div className="text-center mb-8">
+                        <div className="text-6xl mb-4 animate-pulse">🌿</div>
+                        <h1 className="text-3xl md:text-4xl font-bold text-teal-800 mb-2">
+                          Benvenuto nel tuo Mental Health Coach!
+                        </h1>
+                        <p className="text-lg text-gray-700 mb-8">
+                          Un'app dedicata al benessere mentale di <span className="font-semibold text-teal-700">Artisti e Studenti</span>
+                        </p>
+
+                        {/* CTA Buttons PROMINENTI */}
+                        <div className="flex flex-col gap-3 mb-6">
+                          <button
+                            onClick={() => {
+                              setShowWelcomeModal(false);
+                              setShowTour(true);
+                              localStorage.setItem('hasVisitedBefore', 'true');
+                            }}
+                            className="w-full bg-gradient-to-r from-teal-500 via-green-500 to-emerald-500 hover:from-teal-600 hover:via-green-600 hover:to-emerald-600 text-white px-8 py-6 rounded-2xl font-bold text-xl md:text-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all flex items-center justify-center gap-3 border-4 border-white/30 animate-pulse"
+                          >
+                            <Sparkles className="w-8 h-8" />
+                            🎯 Inizia il Tour Guidato (Consigliato!)
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setShowWelcomeModal(false);
+                              localStorage.setItem('hasVisitedBefore', 'true');
+                            }}
+                            className="w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-5 rounded-2xl font-bold text-lg md:text-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all border-2 border-gray-400/50"
+                          >
+                            👤 Esplora da Solo
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Funzionalità Grid */}
+                      <div className="grid md:grid-cols-2 gap-4 mb-8">
+                        <div className="bg-white/80 backdrop-blur rounded-2xl p-5 border-2 border-teal-300/50 shadow-lg hover:scale-105 transition-transform">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-3xl">😊</div>
+                            <h3 className="font-bold text-xl text-teal-800">Mood Tracking</h3>
+                          </div>
+                          <p className="text-gray-700 text-sm">
+                            Traccia il tuo stato emotivo quotidiano. Visualizza pattern e scopri cosa influenza il tuo umore.
+                          </p>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur rounded-2xl p-5 border-2 border-purple-300/50 shadow-lg hover:scale-105 transition-transform">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-3xl">📝</div>
+                            <h3 className="font-bold text-xl text-purple-800">Diario Creativo</h3>
+                          </div>
+                          <p className="text-gray-700 text-sm">
+                            Scrivi liberamente i tuoi pensieri, progetti e riflessioni. Tutto salvato in modo sicuro.
+                          </p>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur rounded-2xl p-5 border-2 border-pink-300/50 shadow-lg hover:scale-105 transition-transform">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-3xl">🎨</div>
+                            <h3 className="font-bold text-xl text-pink-800">86 Esercizi Creativi</h3>
+                          </div>
+                          <p className="text-gray-700 text-sm">
+                            Esercizi per sblocco creativo, burnout, ansia da critica e molto altro. Con timer integrato!
+                          </p>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur rounded-2xl p-5 border-2 border-blue-300/50 shadow-lg hover:scale-105 transition-transform">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-3xl">🤖</div>
+                            <h3 className="font-bold text-xl text-blue-800">AI Feedback</h3>
+                          </div>
+                          <p className="text-gray-700 text-sm">
+                            Carica le tue opere e ricevi feedback costruttivo da AI. Esercizi infiniti personalizzati!
+                          </p>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur rounded-2xl p-5 border-2 border-green-300/50 shadow-lg hover:scale-105 transition-transform">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-3xl">📊</div>
+                            <h3 className="font-bold text-xl text-green-800">Insights & Report</h3>
+                          </div>
+                          <p className="text-gray-700 text-sm">
+                            Analisi dettagliate del tuo benessere. Report AI su pattern emotivi e consigli personalizzati.
+                          </p>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur rounded-2xl p-5 border-2 border-indigo-300/50 shadow-lg hover:scale-105 transition-transform">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="text-3xl">☁️</div>
+                            <h3 className="font-bold text-xl text-indigo-800">Cloud Sync (Opzionale)</h3>
+                          </div>
+                          <p className="text-gray-700 text-sm">
+                            Registrati per sincronizzare i tuoi dati su tutti i dispositivi. Sempre al sicuro!
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Privacy Note */}
+                      <div className="bg-teal-100 border-l-4 border-teal-500 p-4 rounded">
+                        <div className="flex items-start gap-2">
+                          <Info className="w-5 h-5 text-teal-700 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-semibold text-teal-800 mb-1">🔒 Privacy First</p>
+                            <p className="text-sm text-teal-700">
+                              Tutti i tuoi dati sono salvati localmente sul tuo dispositivo.
+                              La registrazione cloud è <strong>completamente opzionale</strong> e puoi usare l'app liberamente senza account!
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-center text-sm text-gray-600 mt-4">
+                        💡 Puoi sempre riaprire questo tutorial cliccando "Rivedi Tutorial" nella home
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tour Guidato Interattivo */}
+              {showTour && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fadeIn">
+                  <div className="bg-gradient-to-br from-white via-teal-50 to-green-50 rounded-3xl shadow-2xl max-w-2xl w-full border-4 border-teal-400/50 animate-slideIn">
+                    <div className="p-6 md:p-8">
+                      {/* Progress Bar */}
+                      <div className="mb-6">
+                        <div className="flex justify-between text-sm text-gray-600 mb-2">
+                          <span>Passo {tourStep + 1} di 5</span>
+                          <span>{Math.round(((tourStep + 1) / 5) * 100)}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-teal-500 to-green-500 transition-all duration-300"
+                            style={{ width: `${((tourStep + 1) / 5) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Step Content */}
+                      {tourStep === 0 && (
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">😊</div>
+                          <h2 className="text-2xl md:text-3xl font-bold text-teal-800 mb-4">
+                            1. Traccia il tuo Mood
+                          </h2>
+                          <p className="text-gray-700 text-lg mb-4">
+                            Ogni giorno puoi registrare come ti senti scegliendo tra 15 emozioni diverse.
+                          </p>
+                          <div className="bg-white/80 rounded-xl p-4 border-2 border-teal-300/50">
+                            <p className="text-sm text-gray-600 mb-2">
+                              <strong>Dove trovarlo:</strong> Clicca su "Traccia Mood" nella home
+                            </p>
+                            <p className="text-sm text-teal-700">
+                              💡 <em>Tip: Tracciare il mood regolarmente ti aiuta a identificare pattern emotivi</em>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {tourStep === 1 && (
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">📝</div>
+                          <h2 className="text-2xl md:text-3xl font-bold text-purple-800 mb-4">
+                            2. Scrivi nel Diario Creativo
+                          </h2>
+                          <p className="text-gray-700 text-lg mb-4">
+                            Uno spazio privato per le tue riflessioni, progetti e pensieri creativi.
+                          </p>
+                          <div className="bg-white/80 rounded-xl p-4 border-2 border-purple-300/50">
+                            <p className="text-sm text-gray-600 mb-2">
+                              <strong>Dove trovarlo:</strong> Clicca su "Diario Creativo" nella home
+                            </p>
+                            <p className="text-sm text-purple-700">
+                              💡 <em>Tip: Non serve scrivere molto, anche poche righe vanno bene!</em>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {tourStep === 2 && (
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">🎨</div>
+                          <h2 className="text-2xl md:text-3xl font-bold text-pink-800 mb-4">
+                            3. Esplora 86 Esercizi Creativi
+                          </h2>
+                          <p className="text-gray-700 text-lg mb-4">
+                            Esercizi specifici per: blocco creativo, burnout, ansia da critica, mancanza ispirazione e altro.
+                          </p>
+                          <div className="bg-white/80 rounded-xl p-4 border-2 border-pink-300/50 space-y-2">
+                            <p className="text-sm text-gray-600">
+                              <strong>Dove trovarli:</strong> Clicca su "Esercizi Creativi" nella home
+                            </p>
+                            <p className="text-sm text-pink-700">
+                              💡 <em>Ogni esercizio ha un timer integrato e 3 esempi pratici!</em>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {tourStep === 3 && (
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">🤖</div>
+                          <h2 className="text-2xl md:text-3xl font-bold text-blue-800 mb-4">
+                            4. AI Feedback (Opzionale)
+                          </h2>
+                          <p className="text-gray-700 text-lg mb-4">
+                            Configura una API key di Google Gemini per sbloccare:
+                          </p>
+                          <div className="bg-white/80 rounded-xl p-4 border-2 border-blue-300/50 text-left space-y-2">
+                            <p className="text-sm text-gray-700">
+                              ✨ <strong>Esercizi infiniti</strong> generati su misura per te
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              🖼️ <strong>Feedback su opere</strong> caricate
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              📊 <strong>Report AI</strong> sul tuo benessere mentale
+                            </p>
+                            <p className="text-sm text-blue-700 mt-3 pt-3 border-t border-blue-200">
+                              💡 <em>Tip: Puoi usare l'app anche senza API key! Avrai comunque accesso a 86 esercizi.</em>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {tourStep === 4 && (
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">🎉</div>
+                          <h2 className="text-2xl md:text-3xl font-bold text-green-800 mb-4">
+                            5. Sei Pronto/a!
+                          </h2>
+                          <p className="text-gray-700 text-lg mb-4">
+                            Ora hai tutto quello che ti serve per iniziare il tuo percorso di benessere mentale.
+                          </p>
+                          <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-5 border-2 border-green-300/50 space-y-3">
+                            <p className="text-sm text-gray-700">
+                              📊 <strong>Insights & Report:</strong> Visualizza statistiche e pattern nel tempo
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              ☁️ <strong>Cloud Sync:</strong> Registrati per sincronizzare i dati su più dispositivi
+                            </p>
+                            <p className="text-sm text-green-700 mt-3 pt-3 border-t border-green-200">
+                              🌿 <strong>Ricorda:</strong> Prenditi cura di te stesso/a. Anche piccoli passi fanno la differenza!
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Navigation Buttons */}
+                      <div className="flex gap-3 mt-8">
+                        {tourStep > 0 && (
+                          <button
+                            onClick={() => setTourStep(tourStep - 1)}
+                            className="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl font-semibold transition-colors"
+                          >
+                            ← Indietro
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            if (tourStep < 4) {
+                              setTourStep(tourStep + 1);
+                            } else {
+                              setShowTour(false);
+                              setTourStep(0);
+                            }
+                          }}
+                          className="flex-1 bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
+                        >
+                          {tourStep < 4 ? 'Avanti →' : '🎉 Inizia ad Usare l\'App!'}
+                        </button>
+                      </div>
+
+                      {/* Skip Button */}
+                      <button
+                        onClick={() => {
+                          setShowTour(false);
+                          setTourStep(0);
+                        }}
+                        className="w-full mt-3 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                      >
+                        Salta il tour
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Bottoni Profilo e Firebase Fissi */}
               <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-[200px]">
                 {firebaseUser ? (
@@ -3830,22 +4149,24 @@ IMPORTANTE: Scrivi in modo conversazionale e diretto. NON usare etichette come "
                   <>
                     <button
                       onClick={() => setShowFirebaseAuth(true)}
-                      className="bg-gradient-to-r from-purple-400/90 via-pink-400/90 to-rose-400/90 md:from-purple-400 md:via-pink-400 md:to-rose-400 text-gray-800 px-4 py-2 md:px-6 md:py-3 rounded-xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all border-2 border-teal-300/50 backdrop-blur-sm calm-glow animate-pulse"
+                      className="bg-gradient-to-r from-teal-400 via-green-400 to-emerald-400 hover:from-teal-500 hover:via-green-500 hover:to-emerald-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all border-2 border-white/30 backdrop-blur-sm"
+                      title="Registrati per sincronizzare i tuoi dati su Cloud"
                     >
                       <div className="flex items-center gap-2 font-bold">
-                        <span className="text-xl md:text-2xl">🌿</span>
+                        <Cloud className="w-5 h-5 md:w-6 md:h-6" />
                         <div className="text-left">
-                          <div className="text-xs md:text-sm leading-tight">Registrati GRATIS</div>
-                          <div className="text-[10px] md:text-xs font-normal opacity-90">Ottieni i dolcetti</div>
+                          <div className="text-sm md:text-base leading-tight">Registrati per Cloud Sync</div>
+                          <div className="text-[10px] md:text-xs font-normal opacity-90">Salva i dati su tutti i dispositivi</div>
                         </div>
                       </div>
                     </button>
                     <button
                       onClick={() => setShowProfileBenefits(true)}
-                      className="bg-gray-700/60 md:bg-gray-700/80 hover:bg-gray-600/80 text-gray-300 px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-md hover:shadow-lg transition-all border border-gray-600/50 backdrop-blur-sm flex items-center gap-2 text-xs md:text-sm"
+                      className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-500/50 backdrop-blur-sm flex items-center justify-center gap-2 text-sm md:text-base min-h-[44px]"
+                      title="Usa l'app senza registrarti, i dati resteranno solo sul tuo dispositivo"
                     >
-                      <span>👤</span>
-                      <span className="font-medium">Solo Visita <span className="text-[10px] md:text-xs opacity-70">(niente caramelle)</span></span>
+                      <span className="text-xl">👤</span>
+                      <span className="font-semibold">Esplora senza Account</span>
                     </button>
                   </>
                 )}
